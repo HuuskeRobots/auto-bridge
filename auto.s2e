@@ -1,0 +1,10 @@
+{
+    "extensionName": "Robot Auto",
+    "extensionPort": 8089,
+    "blockSpecs": [
+        [ "", "Motor %m.motorAction", "motor", "stop"]
+    ],
+    "menus": {
+        "motorAction": ["stop","vooruit","achteruit", "links", "rechts"]
+    }
+}
