@@ -12,8 +12,15 @@ import (
 	"gobot.io/x/gobot/platforms/firmata"
 )
 
+const (
+	defaultIP = "192.168.4.1"
+)
+
 var (
-	ip        string
+	robotIP   string // IP address of robot
+	robotPort int    // Port on robot
+	robotName string // Hostname of robot
+
 	robot     *gobot.Robot
 	motorA_BW *gpio.DirectPinDriver
 	motorA_FW *gpio.DirectPinDriver
@@ -22,18 +29,37 @@ var (
 )
 
 func init() {
-	flag.StringVar(&ip, "ip", "192.168.4.1", "IP address of the robot")
+	flag.StringVar(&robotIP, "ip", "", "IP address of the robot")
+	flag.IntVar(&robotPort, "port", 3030, "IP address of the robot")
+	flag.StringVar(&robotName, "name", "", "MDNS Name of the robot")
 }
 
 func main() {
 	flag.Parse()
-	addr := fmt.Sprintf("%s:3030", ip)
+
+	if robotName == "" && robotIP == "" {
+		robotIP = defaultIP
+	} else if robotIP == "" {
+		var err error
+		robotIP, err = findRobotIP(robotName)
+		if err != nil {
+			log.Fatalf("Kan robot '%s' niet vinden\n", robotName)
+		}
+	}
+
+	addr := fmt.Sprintf("%s:%d", robotIP, robotPort)
 	log.Printf("Connecting to %s\n", addr)
 	firmataAdaptor := firmata.NewTCPAdaptor(addr)
 	n := func(name string, d gobot.Device) gobot.Device {
 		d.SetName(name)
 		return d
 	}
+
+	go func() {
+		for e := range firmataAdaptor.Subscribe() {
+			log.Printf("Event: %s=%v\n", e.Name, e.Data)
+		}
+	}()
 
 	work := func() {
 		initHttpServer()

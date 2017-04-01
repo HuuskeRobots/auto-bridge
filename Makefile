@@ -40,6 +40,7 @@ build: $(BIN)
 deployment:
 	@${MAKE} -B GOOS=windows GOARCH=amd64 GOEXE=.exe build
 	@${MAKE} -B GOOS=linux GOARCH=amd64 build
+	@${MAKE} -B GOOS=linux GOARCH=386 build
 	@${MAKE} -B GOOS=darwin GOARCH=amd64 build
 
 clean:
@@ -57,7 +58,8 @@ update-vendor:
 	@pulsar go vendor -V $(VENDORDIR) \
 		gobot.io/x/gobot/ \
 		gobot.io/x/gobot/platforms/firmata \
-		golang.org/x/sys/unix
+		golang.org/x/sys/unix \
+		github.com/oleksandr/bonjour
 
 $(BIN): $(GOBUILDDIR) $(SOURCES)
 	GOOS=$(GOOS) GOARCH=$(GOARCH) GOPATH=$(GOBUILDDIR) go build -ldflags=-s -o bin/$(GOOS)-$(GOARCH)/auto$(GOEXE) $(REPOPATH)
