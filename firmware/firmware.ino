@@ -26,6 +26,7 @@ String robotName;
 // firmware-secure.h must contain:
 // char ssid[] = "your-wifi-ssid";
 // char wpa_passphrase[] = "your-wpa-password";
+// char ap_wpa_passphrase[] = "your-wpa-password for the soft AP";
 // #define OTA_PASSWORD "your-ota-password"
 
 #include "firmware-secure.h"
@@ -145,7 +146,7 @@ void initTransport()
 
   DEBUG_PRINTLN("IP will be requested from DHCP ...");
 
-  WiFi.softAP(robotName.c_str());
+  WiFi.softAP(robotName.c_str(), ap_wpa_passphrase);
 
   stream.attach(hostConnectionCallback);
 
