@@ -54,13 +54,15 @@ $(GOBUILDDIR):
 	@rm -f $(REPODIR) && ln -s ../../../.. $(REPODIR)
 
 update-vendor:
+	# Careful! There are customizations in vendor
 	@rm -Rf $(VENDORDIR)
 	@pulsar go vendor -V $(VENDORDIR) \
+		github.com/juju/errgo \
 		gobot.io/x/gobot/ \
 		gobot.io/x/gobot/platforms/firmata \
 		golang.org/x/sys/unix \
 		github.com/oleksandr/bonjour
 
 $(BIN): $(GOBUILDDIR) $(SOURCES)
-	GOOS=$(GOOS) GOARCH=$(GOARCH) GOPATH=$(GOBUILDDIR) go build -ldflags=-s -o bin/$(GOOS)-$(GOARCH)/auto$(GOEXE) $(REPOPATH)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) GOPATH=$(GOBUILDDIR) go build -ldflags "-s -X main.projectVersion=$(VERSION) -X main.projectBuild=$(COMMIT)" -o bin/$(GOOS)-$(GOARCH)/auto$(GOEXE) $(REPOPATH)
 

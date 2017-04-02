@@ -48,15 +48,16 @@ type Adaptor struct {
 // is supplied, then the Adaptor will use the provided io.ReadWriteCloser and use the
 // string port as a label to be displayed in the log and api.
 func NewAdaptor(args ...interface{}) *Adaptor {
+	board := client.New()
 	f := &Adaptor{
 		name:  gobot.DefaultName("Firmata"),
 		port:  "",
 		conn:  nil,
-		board: client.New(),
+		board: board,
 		PortOpener: func(port string) (io.ReadWriteCloser, error) {
 			return serial.OpenPort(&serial.Config{Name: port, Baud: 57600})
 		},
-		Eventer: gobot.NewEventer(),
+		Eventer: board.Eventer,
 	}
 
 	for _, arg := range args {

@@ -36,7 +36,7 @@ func findRobotIP(robotName string) (string, error) {
 	case e := <-robotEntry:
 		ip := e.AddrIPv4.String()
 		return ip, nil
-	case <-time.After(time.Minute):
+	case <-time.After(time.Second * 15):
 		return "", errors.New("Timeout")
 	}
 }
