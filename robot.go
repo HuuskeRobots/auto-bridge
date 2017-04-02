@@ -87,16 +87,16 @@ func (r *Robot) MotorBackward() error {
 	return nil
 }
 
-// MotorTurnLeft drivers both motors to make a left turn
-func (r *Robot) MotorTurnLeft() error {
+// MotorTurnRight drivers both motors to make a right turn
+func (r *Robot) MotorTurnRight() error {
 	if err := r.setMotor(true, false, true, true); err != nil {
 		return maskAny(err)
 	}
 	return nil
 }
 
-// MotorTurnRight drivers both motors to make a right turn
-func (r *Robot) MotorTurnRight() error {
+// MotorTurnLeft drivers both motors to make a left turn
+func (r *Robot) MotorTurnLeft() error {
 	if err := r.setMotor(true, true, true, false); err != nil {
 		return maskAny(err)
 	}
