@@ -20,11 +20,12 @@ func findRobotIP(robotName string) (string, error) {
 	robotEntry := make(chan *bonjour.ServiceEntry)
 	go func(results chan *bonjour.ServiceEntry, exitCh chan<- bool) {
 		for e := range results {
-			log.Printf("gevonden: '%s', '%s' %s:%d\n", e.Instance, e.Service, e.AddrIPv4.String(), e.Port)
 			if strings.HasPrefix(e.Instance, robotName+".") {
+				log.Printf("Robot gevonden op: '%s'\n", e.AddrIPv4.String())
 				robotEntry <- e
 				exitCh <- true
 			}
+			log.Printf("gevonden: '%s', '%s' %s:%d\n", e.Instance, e.Service, e.AddrIPv4.String(), e.Port)
 		}
 	}(results, resolver.Exit)
 
